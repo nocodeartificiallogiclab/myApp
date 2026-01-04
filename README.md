@@ -43,6 +43,15 @@ money-management-app/
 pip install -r requirements.txt
 ```
 
+## Supabase Integration (Optional)
+
+This app supports integration with Supabase for cloud storage. See [SUPABASE_SETUP.md](SUPABASE_SETUP.md) for detailed setup instructions.
+
+To enable Supabase:
+1. Create database tables using the SQL script in `supabase_setup.sql`
+2. Copy `.env.example` to `.env` and add your Supabase credentials
+3. The app will automatically save data to both local storage and Supabase
+
 ## Usage
 
 Run the application using Streamlit:

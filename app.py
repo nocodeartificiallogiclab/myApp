@@ -1,11 +1,16 @@
 """Main Streamlit application entry point."""
 
+import os
 import streamlit as st
+from dotenv import load_dotenv
 
-from storage.storage_handler import StorageHandler
+from storage.hybrid_storage import HybridStorageHandler
 from services.transaction_service import TransactionService
 from services.analytics_service import AnalyticsService
 from ui import dashboard, add_transaction, analytics
+
+# Load environment variables
+load_dotenv()
 
 
 # Page configuration
@@ -18,7 +23,13 @@ st.set_page_config(
 
 # Initialize services (using session state to persist across reruns)
 if "storage_handler" not in st.session_state:
-    st.session_state.storage_handler = StorageHandler()
+    # Use hybrid storage handler that saves to both local JSON and Supabase
+    st.session_state.storage_handler = HybridStorageHandler(
+        data_dir="data",
+        supabase_url=os.getenv("SUPABASE_URL"),
+        supabase_key=os.getenv("SUPABASE_KEY"),
+        use_supabase=bool(os.getenv("SUPABASE_URL") and os.getenv("SUPABASE_KEY")),
+    )
 
 if "transaction_service" not in st.session_state:
     st.session_state.transaction_service = TransactionService(
